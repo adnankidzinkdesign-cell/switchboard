@@ -31,13 +31,16 @@ Two jobs, once this exists:
      "Accounts in this organizational directory only" (single-tenant) —
      otherwise any Microsoft account, not just `@kidzink.com` staff, could
      sign in.
-   - creator2/scorecard have existing Supabase user rows tied to
-     email/password today. Switching to Azure sign-in needs those to
-     resolve to the *same* user record by email rather than creating
-     duplicate accounts — a real per-app migration detail, not just a
-     config toggle.
-   - Cutover style: hard switch, or keep password login as a fallback
-     during a transition window?
+   - **creator2** has real user rows tied to email/password today — switching
+     to Azure sign-in needs those to resolve to the *same* user record by
+     email rather than creating duplicate accounts. A real per-app migration
+     detail, not just a config toggle.
+   - **scorecard**'s current users are just test users, not real accounts —
+     no migration/email-matching concern there, it can just be cut over
+     cleanly (recreate test users post-switch if needed) rather than
+     migrated.
+   - Cutover style (for creator2, where it matters): hard switch, or keep
+     password login as a fallback during a transition window?
 
 2. **App registry.** The source of truth for which apps exist, their live
    URLs, current status (in development / coming soon / live), and — once
