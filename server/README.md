@@ -20,15 +20,21 @@ login.
 Where each app stands:
 - **consultflow** — already on Microsoft 365 / Entra ID SSO. Nothing to
   migrate.
-- **Switchboard** — built. Supabase Auth with the Azure provider
-  (`signInWithOAuth({ provider: 'azure' })`), not a separate MSAL.js
-  integration — decided in favor of matching creator2/scorecard's plan
-  below. See `client/src/Login.jsx`.
+- **Switchboard** — built, but Microsoft sign-in is currently *deferred*:
+  the Azure App Registration it depends on isn't something the user can set
+  up right now. `signInWithOAuth({ provider: 'azure' })` is still there and
+  works as soon as that's ready — see `MICROSOFT_SIGN_IN_ENABLED` in
+  `client/src/Login.jsx`, just flip it to `true`. In the meantime, sign-in
+  is Supabase's email magic link (`signInWithOtp`) instead, restricted
+  client-side to `@kidzink.com` addresses — genuinely temporary, not a
+  replacement plan, since it needs no Azure setup and RLS/`app_access`
+  behave identically regardless of which auth method produced the session.
 - **creator2**, **scorecard** — both still on Supabase Auth with
-  email/password today. Plan is to switch these to the same Azure provider
-  approach rather than replacing Supabase — keeps their existing session
-  handling, RLS, and role-guard middleware (e.g. creator2's `proxy.ts`)
-  intact; only the login method changes. Not started.
+  email/password today. Plan is to switch these to the Azure provider
+  approach (once Switchboard's own Azure setup is sorted) rather than
+  replacing Supabase — keeps their existing session handling, RLS, and
+  role-guard middleware (e.g. creator2's `proxy.ts`) intact; only the login
+  method changes. Not started.
 
 Why the hand-off to another app can be a plain link and not custom plumbing:
 Entra ID does SSO natively across apps in the same tenant. Once a user has

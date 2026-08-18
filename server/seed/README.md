@@ -8,10 +8,17 @@ One-time setup for a fresh Supabase project, in order:
    → Run. Adds all ~277 people from `creator2-profiles-export.json` as
    `switchboard_users` rows, nobody granted access to any app yet (default
    deny — see `0001_init.sql`'s comments).
-3. **Enable Azure sign-in.** Supabase dashboard → Authentication → Providers
-   → Azure, backed by an Azure App Registration restricted to "Accounts in
-   this organizational directory only" (@kidzink.com tenant). Sign-in
-   doesn't work until this is done, even with the schema/seed in place.
+3. **Sign-in works out of the box** via email magic link (Supabase's
+   built-in email provider, on by default — no extra setup) — Microsoft
+   sign-in is deferred pending an Azure App Registration the user isn't
+   able to set up right now (see `client/src/Login.jsx`'s
+   `MICROSOFT_SIGN_IN_ENABLED` flag). One thing that WILL bite at any real
+   scale: Supabase's built-in email sending is rate-limited hard (a handful
+   of emails per hour) since it's meant only for development/testing, not
+   production traffic. Fine for the four admins signing in to test this,
+   not fine for onboarding real users broadly — configure custom SMTP
+   (Authentication → Settings → SMTP Settings) before relying on this for
+   more than a few people at once.
 4. **Sign in as one of the four seeded admins** (`adam@kidzink.com`,
    `adnan@kidzink.com`, `fida@kidzink.com`, `sanandu@kidzink.com` — pulled
    from creator2's `role = 'admin'` rows, since they're the ones already

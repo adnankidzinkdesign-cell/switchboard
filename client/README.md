@@ -15,7 +15,11 @@ src/
   App.jsx         Page shell + routing: background, header, sign-out/admin
                   link, and the / vs /admin route gate.
   PageBackground.jsx  The decorative corner blobs/characters/dot-grid.
-  Login.jsx       Microsoft sign-in card, shown when signed out.
+  Login.jsx       Sign-in card, shown when signed out. Email magic link
+                  is the active method today (@kidzink.com only); Microsoft
+                  sign-in is coded but deferred behind
+                  MICROSOFT_SIGN_IN_ENABLED = false pending an Azure App
+                  Registration -- flip that flag once it exists.
   Launcher.jsx    The card grid, filtered to only the apps the signed-in
                   user has been granted (via allowedAppIds).
   AdminPanel.jsx  /admin, admin-only: every person x every app, toggled
