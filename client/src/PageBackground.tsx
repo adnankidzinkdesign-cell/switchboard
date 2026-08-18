@@ -7,7 +7,11 @@
 // tuned around. The admin panel's wider, left-aligned table runs right into
 // where the skater illustration sits at those same coordinates, so it opts
 // out rather than the positions being fudged to accommodate every page.
-export default function PageBackground({ showCharacters = true }) {
+interface PageBackgroundProps {
+  showCharacters?: boolean;
+}
+
+export default function PageBackground({ showCharacters = true }: PageBackgroundProps) {
   return (
     <>
       <div className="pointer-events-none absolute -left-28 top-24 z-0 h-56 w-[420px] rounded-[54%_46%_54%_46%/56%_44%_56%_44%] bg-[#f2bfd9] opacity-70 sm:opacity-100" />

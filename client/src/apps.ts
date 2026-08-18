@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import {
   User,
   BarChart3,
@@ -9,10 +10,23 @@ import {
   ClipboardCheck,
 } from 'lucide-react';
 
+export type AppStatus = 'in-development' | 'coming-soon';
+
+export interface AppEntry {
+  id: string;
+  title: string;
+  description: string;
+  status: AppStatus;
+  icon: LucideIcon;
+  bg: string;
+  iconBg: string;
+  href: string | null;
+}
+
 // Central registry of every app surfaced on the Switchboard.
 // `href` is left null until each app has a real deployed URL to link to —
 // wire it up here once the backend/routing for that app exists.
-export const apps = [
+export const apps: AppEntry[] = [
   {
     id: 'consultant-hub',
     title: 'Consultant Hub',
@@ -95,7 +109,7 @@ export const apps = [
   },
 ];
 
-export const STATUS_LABEL = {
+export const STATUS_LABEL: Record<AppStatus, string> = {
   'in-development': 'In development',
   'coming-soon': 'Coming soon',
 };

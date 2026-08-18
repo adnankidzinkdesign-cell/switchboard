@@ -1,15 +1,23 @@
+import type { CSSProperties } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { STATUS_LABEL } from './apps';
+import { STATUS_LABEL, type AppEntry } from './apps';
 
-export default function AppCard({ app }) {
+// React's CSSProperties doesn't know about custom properties -- --icon-bg
+// is read by the color-mix() Tailwind arbitrary-value classes below.
+interface CardStyle extends CSSProperties {
+  '--icon-bg': string;
+}
+
+export default function AppCard({ app }: { app: AppEntry }) {
   const { title, description, status, icon: Icon, bg, iconBg, href } = app;
   const isLive = status === 'in-development';
   const cta = isLive ? 'Open app' : 'Learn more';
+  const cardStyle: CardStyle = { backgroundColor: bg, '--icon-bg': iconBg };
 
   return (
     <article
       className="relative flex min-h-[280px] flex-col overflow-hidden rounded-[28px] px-[22px] pt-[22px] pb-5 shadow-[0_10px_26px_rgba(24,24,27,0.07)]"
-      style={{ backgroundColor: bg, '--icon-bg': iconBg }}
+      style={cardStyle}
     >
       <Icon
         aria-hidden="true"

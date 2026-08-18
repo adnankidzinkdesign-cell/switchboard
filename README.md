@@ -9,7 +9,7 @@ without a separate login for each.
 
 ```
 client/   The launcher UI (Vite + React + Tailwind CSS v4). Currently
-          ships with a static app registry (src/apps.js) and no backend —
+          ships with a static app registry (src/apps.ts) and no backend —
           see client/README.md.
 server/   Not built yet. Will own the app registry (which apps exist, their
           live URLs/status) and the single-sign-on flow. See server/README.md

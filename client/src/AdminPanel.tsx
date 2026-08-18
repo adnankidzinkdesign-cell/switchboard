@@ -1,31 +1,56 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, Search } from 'lucide-react';
 import { apps } from './apps';
 import { supabase } from './lib/supabaseClient';
+import type { SwitchboardUser } from './lib/database.types';
 
 // Clearly-fake sample rows for demoMode -- never real employee data. Lets
 // someone preview the panel's layout/interaction before Microsoft sign-in
 // is enabled, without weakening RLS to expose the real roster to anyone
 // who isn't actually authenticated as an admin.
-const DEMO_USERS = [
-  { email: 'avery@example.com', display_name: 'Avery (sample)', role: 'admin' },
-  { email: 'jordan@example.com', display_name: 'Jordan (sample)', role: 'user' },
-  { email: 'sam@example.com', display_name: null, role: 'user' },
+const DEMO_USERS: SwitchboardUser[] = [
+  {
+    email: 'avery@example.com',
+    display_name: 'Avery (sample)',
+    role: 'admin',
+    auth_user_id: null,
+    created_at: '',
+    last_sign_in_at: null,
+  },
+  {
+    email: 'jordan@example.com',
+    display_name: 'Jordan (sample)',
+    role: 'user',
+    auth_user_id: null,
+    created_at: '',
+    last_sign_in_at: null,
+  },
+  {
+    email: 'sam@example.com',
+    display_name: null,
+    role: 'user',
+    auth_user_id: null,
+    created_at: '',
+    last_sign_in_at: null,
+  },
 ];
-const DEMO_ACCESS = {
+const DEMO_ACCESS: Record<string, Set<string>> = {
   'avery@example.com': new Set(['consultant-hub', 'project-pulse']),
   'jordan@example.com': new Set(['project-pulse']),
 };
 
-export default function AdminPanel({ demoMode = false }) {
-  const [users, setUsers] = useState(demoMode ? DEMO_USERS : null);
-  const [access, setAccess] = useState(demoMode ? DEMO_ACCESS : {}); // { [email]: Set<app_id> }
+export default function AdminPanel({ demoMode = false }: { demoMode?: boolean }) {
+  const [users, setUsers] = useState<SwitchboardUser[] | null>(demoMode ? DEMO_USERS : null);
+  const [access, setAccess] = useState<Record<string, Set<string>>>(
+    demoMode ? DEMO_ACCESS : {}
+  );
   const [query, setQuery] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (demoMode) return;
+    if (!supabase) return;
 
     (async () => {
       const [{ data: userRows, error: usersError }, { data: accessRows, error: accessError }] =
@@ -35,12 +60,12 @@ export default function AdminPanel({ demoMode = false }) {
         ]);
 
       if (usersError || accessError) {
-        setError((usersError ?? accessError).message);
+        setError((usersError ?? accessError)!.message);
         return;
       }
 
-      const accessMap = {};
-      for (const row of accessRows) {
+      const accessMap: Record<string, Set<string>> = {};
+      for (const row of accessRows ?? []) {
         (accessMap[row.email] ??= new Set()).add(row.app_id);
       }
       setUsers(userRows);
@@ -57,7 +82,7 @@ export default function AdminPanel({ demoMode = false }) {
     );
   }, [users, query]);
 
-  async function toggle(email, appId, nextValue) {
+  async function toggle(email: string, appId: string, nextValue: boolean) {
     // Optimistic update -- an admin toggling access shouldn't wait on a
     // round-trip to see the checkbox move.
     setAccess((prev) => {
@@ -66,7 +91,7 @@ export default function AdminPanel({ demoMode = false }) {
       return next;
     });
 
-    if (demoMode) return; // nothing to persist -- sample data only
+    if (demoMode || !supabase) return; // nothing to persist -- sample data only
 
     const { error: upsertError } = await supabase
       .from('app_access')
@@ -172,7 +197,9 @@ export default function AdminPanel({ demoMode = false }) {
                         <input
                           type="checkbox"
                           checked={access[user.email]?.has(app.id) ?? false}
-                          onChange={(e) => toggle(user.email, app.id, e.target.checked)}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            toggle(user.email, app.id, e.target.checked)
+                          }
                           className="h-4 w-4 accent-accent"
                           aria-label={`${user.email} can access ${app.title}`}
                         />

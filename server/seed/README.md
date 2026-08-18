@@ -11,7 +11,7 @@ One-time setup for a fresh Supabase project, in order:
 3. **Sign-in works out of the box** via email magic link (Supabase's
    built-in email provider, on by default — no extra setup) — Microsoft
    sign-in is deferred pending an Azure App Registration the user isn't
-   able to set up right now (see `client/src/Login.jsx`'s
+   able to set up right now (see `client/src/Login.tsx`'s
    `MICROSOFT_SIGN_IN_ENABLED` flag). One thing that WILL bite at any real
    scale: Supabase's built-in email sending is rate-limited hard (a handful
    of emails per hour) since it's meant only for development/testing, not

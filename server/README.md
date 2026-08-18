@@ -24,7 +24,7 @@ Where each app stands:
   the Azure App Registration it depends on isn't something the user can set
   up right now. `signInWithOAuth({ provider: 'azure' })` is still there and
   works as soon as that's ready — see `MICROSOFT_SIGN_IN_ENABLED` in
-  `client/src/Login.jsx`, just flip it to `true`. In the meantime, sign-in
+  `client/src/Login.tsx`, just flip it to `true`. In the meantime, sign-in
   is Supabase's email magic link (`signInWithOtp`) instead, restricted
   client-side to `@kidzink.com` addresses — genuinely temporary, not a
   replacement plan, since it needs no Azure setup and RLS/`app_access`
@@ -70,7 +70,7 @@ Built. Schema in `migrations/0001_init.sql`, roster seed in
   (`boq`, `procurement`, etc.) — Switchboard only needs "can this person see
   this app", not feature-level flags within an app. Default-deny: nobody
   sees an app until an admin explicitly grants it.
-- `/admin` in the client (`AdminPanel.jsx`) — a grid of every person × every
+- `/admin` in the client (`AdminPanel.tsx`) — a grid of every person × every
   app, admin-only, backed directly by these two tables through Supabase's
   client SDK (no custom API needed, RLS does the authorization).
 - `claim_profile()` (a Postgres function) links a person's Entra ID identity
@@ -80,7 +80,7 @@ Built. Schema in `migrations/0001_init.sql`, roster seed in
 
 ## App registry
 
-`client/src/apps.js` is still a hardcoded array (id, title, description,
+`client/src/apps.ts` is still a hardcoded array (id, title, description,
 status, icon, colors, href) — fine for now since the set of apps changes
 rarely, unlike per-user access which changes often and is why that part
 got a real table instead. Worth moving into Supabase too eventually for the

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Loader2, Mail } from 'lucide-react';
 import { supabase } from './lib/supabaseClient';
 
@@ -22,7 +22,7 @@ function MicrosoftMark() {
 export default function Login() {
   const [email, setEmail] = useState('');
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
   const signInWithMicrosoft = async () => {
@@ -44,7 +44,7 @@ export default function Login() {
     }
   };
 
-  const sendMagicLink = async (e) => {
+  const sendMagicLink = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!supabase) return;
 

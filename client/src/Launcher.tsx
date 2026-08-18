@@ -1,7 +1,7 @@
 import { apps } from './apps';
 import AppCard from './AppCard';
 
-export default function Launcher({ allowedAppIds }) {
+export default function Launcher({ allowedAppIds }: { allowedAppIds: string[] }) {
   const visibleApps = apps.filter((app) => allowedAppIds.includes(app.id));
 
   return (

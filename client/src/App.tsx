@@ -49,7 +49,7 @@ export default function App() {
             {session && (
               <button
                 type="button"
-                onClick={() => supabase.auth.signOut()}
+                onClick={() => supabase?.auth.signOut()}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
               >
                 <LogOut size={15} strokeWidth={2.5} aria-hidden="true" />
