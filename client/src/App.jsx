@@ -3,11 +3,30 @@ import AppCard from './AppCard';
 
 export default function App() {
   return (
-    <div className="relative min-h-screen overflow-hidden px-[18px] pt-5 pb-10 sm:px-8 sm:pt-7 sm:pb-14">
+    <div className="relative min-h-screen overflow-hidden px-[18px] pt-5 pb-10 sm:px-8 sm:pt-7 sm:pb-14 lg:pb-28">
       <div className="pointer-events-none absolute -left-28 top-24 z-0 h-56 w-[420px] rounded-[54%_46%_54%_46%/56%_44%_56%_44%] bg-[#f2bfd9] opacity-70 sm:opacity-100" />
       <div className="pointer-events-none absolute -right-24 top-2.5 z-0 h-[400px] w-[400px] rounded-full bg-[#f5c738] opacity-70 sm:opacity-100" />
       <div className="pointer-events-none absolute -right-36 -bottom-[110px] z-0 h-64 w-[480px] rounded-[50%_50%_0_50%] bg-[#ef5a51] opacity-70 sm:opacity-100" />
       <div className="pointer-events-none absolute -left-36 -bottom-[100px] z-0 h-64 w-[520px] rounded-[48%_52%_0_50%] bg-[#51b4b8] opacity-70 sm:opacity-100" />
+
+      <img
+        src="/brand/characters/skater.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute left-4 top-36 z-0 hidden w-32 md:block lg:left-10 lg:top-40 lg:w-40"
+      />
+      <img
+        src="/brand/characters/celebrate.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-2 z-0 hidden w-24 lg:right-8 lg:bottom-4 lg:block lg:w-32"
+      />
+      <img
+        src="/brand/characters/spark.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[350px] top-16 z-0 hidden w-16 min-[900px]:block"
+      />
 
       <div className="pointer-events-none absolute right-[200px] top-24 z-1 hidden w-[132px] grid-cols-4 gap-3.5 min-[900px]:grid">
         {Array.from({ length: 12 }).map((_, i) => (
