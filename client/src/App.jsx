@@ -1,36 +1,46 @@
-import { apps } from './apps';
-import AppCard from './AppCard';
+import { Loader2, LogOut } from 'lucide-react';
 import PageBackground from './PageBackground';
+import Login from './Login';
+import Launcher from './Launcher';
+import { useSession } from './hooks/useSession';
+import { supabase } from './lib/supabaseClient';
 
 export default function App() {
+  const { session, loading } = useSession();
+
   return (
     <div className="relative min-h-screen overflow-hidden px-[18px] pt-5 pb-10 sm:px-8 sm:pt-7 sm:pb-14 lg:pb-28">
       <PageBackground />
 
-      <header className="relative z-2 mb-6">
+      <header className="relative z-2 mb-6 flex items-center justify-between">
         <img
           src="/brand/kidzink-logo-red.svg"
           alt="Kidzink"
           className="h-[38px] w-auto"
         />
+        {session && (
+          <button
+            type="button"
+            onClick={() => supabase.auth.signOut()}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
+          >
+            <LogOut size={15} strokeWidth={2.5} aria-hidden="true" />
+            Sign out
+          </button>
+        )}
       </header>
 
       <main className="relative z-2 mx-auto max-w-[1240px]">
-        <h1 className="text-center text-[clamp(2.75rem,6vw,5.5rem)] leading-none font-extrabold tracking-[-0.04em] text-ink-strong">
-          Switchboard
-        </h1>
-        <p className="mx-auto mt-3.5 mb-10 text-center text-[clamp(1.05rem,1.6vw,1.375rem)] font-medium text-ink-strong/68">
-          Your starting point for Kidzink&rsquo;s digital tools.
-        </p>
-
-        <section
-          className="grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[1081px]:grid-cols-4"
-          aria-label="Kidzink applications"
-        >
-          {apps.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </section>
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 py-24">
+            <Loader2 className="h-5 w-5 animate-spin text-accent" aria-hidden="true" />
+            <span className="font-medium text-ink-strong/68">Loading…</span>
+          </div>
+        ) : session ? (
+          <Launcher />
+        ) : (
+          <Login />
+        )}
       </main>
     </div>
   );
