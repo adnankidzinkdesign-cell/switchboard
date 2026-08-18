@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+/* ── The single place any design value is defined ─────────────────────────
+   Official Kidzink swatches (Kidzink Colour Swatches.ase) become Tailwind
+   theme tokens, so components reach for `bg-page`, `text-ink-strong`,
+   `bg-accent`, etc. instead of hard-coding a hex value. Per-app card colors
+   are deliberately NOT theme tokens — they're one-off decorative colors
+   scoped to a single card each, so `src/apps.js` is their source of truth
+   instead (mirrors this file being the source of truth for values reused
+   across the whole UI). */
+@theme {
+  --color-accent: #e43e2f;
+  --color-accent-hover: #b92d22;
+  --color-on-accent: #ffffff;
+
+  --color-page: #e8e1d9;
+  --color-ink-strong: #2e2d2c;
+
+  --font-sans: 'Poppins', system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink-strong);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
