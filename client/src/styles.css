@@ -10,8 +10,6 @@
    across the whole UI). */
 @theme {
   --color-accent: #e43e2f;
-  --color-accent-hover: #b92d22;
-  --color-on-accent: #ffffff;
 
   --color-page: #e8e1d9;
   --color-ink-strong: #2e2d2c;
