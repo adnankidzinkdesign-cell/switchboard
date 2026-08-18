@@ -4,13 +4,29 @@ import { ArrowLeft, Loader2, Search } from 'lucide-react';
 import { apps } from './apps';
 import { supabase } from './lib/supabaseClient';
 
-export default function AdminPanel() {
-  const [users, setUsers] = useState(null);
-  const [access, setAccess] = useState({}); // { [email]: Set<app_id> }
+// Clearly-fake sample rows for demoMode -- never real employee data. Lets
+// someone preview the panel's layout/interaction before Microsoft sign-in
+// is enabled, without weakening RLS to expose the real roster to anyone
+// who isn't actually authenticated as an admin.
+const DEMO_USERS = [
+  { email: 'avery@example.com', display_name: 'Avery (sample)', role: 'admin' },
+  { email: 'jordan@example.com', display_name: 'Jordan (sample)', role: 'user' },
+  { email: 'sam@example.com', display_name: null, role: 'user' },
+];
+const DEMO_ACCESS = {
+  'avery@example.com': new Set(['consultant-hub', 'project-pulse']),
+  'jordan@example.com': new Set(['project-pulse']),
+};
+
+export default function AdminPanel({ demoMode = false }) {
+  const [users, setUsers] = useState(demoMode ? DEMO_USERS : null);
+  const [access, setAccess] = useState(demoMode ? DEMO_ACCESS : {}); // { [email]: Set<app_id> }
   const [query, setQuery] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (demoMode) return;
+
     (async () => {
       const [{ data: userRows, error: usersError }, { data: accessRows, error: accessError }] =
         await Promise.all([
@@ -30,7 +46,7 @@ export default function AdminPanel() {
       setUsers(userRows);
       setAccess(accessMap);
     })();
-  }, []);
+  }, [demoMode]);
 
   const filteredUsers = useMemo(() => {
     if (!users) return [];
@@ -49,6 +65,8 @@ export default function AdminPanel() {
       nextValue ? next[email].add(appId) : next[email].delete(appId);
       return next;
     });
+
+    if (demoMode) return; // nothing to persist -- sample data only
 
     const { error: upsertError } = await supabase
       .from('app_access')
@@ -83,6 +101,14 @@ export default function AdminPanel() {
         Unchecked means hidden -- nobody sees an app until it's explicitly
         granted here.
       </p>
+
+      {demoMode && (
+        <p className="mb-4 rounded-xl bg-[#f5af4d]/15 px-4 py-2.5 text-sm font-medium text-[#8a5a1e]">
+          Preview mode — the three people below are sample data, not real.
+          Sign in as an admin once Microsoft sign-in is enabled to manage
+          actual access.
+        </p>
+      )}
 
       {error && (
         <p className="mb-4 rounded-xl bg-[#dc2626]/10 px-4 py-2.5 text-sm font-medium text-[#dc2626]">

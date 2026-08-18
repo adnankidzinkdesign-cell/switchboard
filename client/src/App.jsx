@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { Loader2, LogOut, ShieldCheck } from 'lucide-react';
 import PageBackground from './PageBackground';
 import Login from './Login';
@@ -10,6 +10,7 @@ import { useProfile } from './hooks/useProfile';
 import { supabase } from './lib/supabaseClient';
 
 export default function App() {
+  const location = useLocation();
   const { session, loading: sessionLoading } = useSession();
   const { allowedAppIds, isAdmin, loading: profileLoading } = useProfile(session);
   const loading = sessionLoading || profileLoading;
@@ -26,7 +27,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-[18px] pt-5 pb-10 sm:px-8 sm:pt-7 sm:pb-14 lg:pb-28">
-      <PageBackground />
+      <PageBackground showCharacters={location.pathname !== '/admin'} />
 
       <header className="relative z-2 mb-6 flex items-center justify-between">
         <img
@@ -34,25 +35,27 @@ export default function App() {
           alt="Kidzink"
           className="h-[38px] w-auto"
         />
-        {session && (
+        {(session || !loginRequired) && (
           <div className="flex items-center gap-5">
-            {isAdmin && (
+            {(isAdmin || !loginRequired) && (
               <Link
                 to="/admin"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
               >
                 <ShieldCheck size={15} strokeWidth={2.5} aria-hidden="true" />
-                Admin
+                Admin{!loginRequired && !isAdmin ? ' (preview)' : ''}
               </Link>
             )}
-            <button
-              type="button"
-              onClick={() => supabase.auth.signOut()}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
-            >
-              <LogOut size={15} strokeWidth={2.5} aria-hidden="true" />
-              Sign out
-            </button>
+            {session && (
+              <button
+                type="button"
+                onClick={() => supabase.auth.signOut()}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
+              >
+                <LogOut size={15} strokeWidth={2.5} aria-hidden="true" />
+                Sign out
+              </button>
+            )}
           </div>
         )}
       </header>
@@ -78,7 +81,13 @@ export default function App() {
             <Route
               path="/admin"
               element={
-                session && isAdmin ? <AdminPanel /> : <Navigate to="/" replace />
+                session && isAdmin ? (
+                  <AdminPanel />
+                ) : !loginRequired ? (
+                  <AdminPanel demoMode />
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             />
           </Routes>
