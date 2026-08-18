@@ -77,6 +77,7 @@ values
   ('ayisha.m@kidzink.com', null, 'user'),
   ('aysha.sabha@kidzink.com', null, 'user'),
   ('basil@kidzink.com', null, 'user'),
+  ('basim@kidzink.com', null, 'user'),
   ('bilal@kidzink.com', null, 'user'),
   ('bimal@kidzink.com', null, 'user'),
   ('bismi@kidzink.com', null, 'user'),

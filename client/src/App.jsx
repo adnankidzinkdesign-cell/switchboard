@@ -14,11 +14,15 @@ export default function App() {
   const { allowedAppIds, isAdmin, loading: profileLoading } = useProfile(session);
   const loading = sessionLoading || profileLoading;
 
-  // No Supabase project is wired up yet (see client/.env.example) --
-  // demo mode: show every app rather than gating on a session that can
-  // never exist. Once real credentials are set, `supabase` stops being
-  // null and this falls through to the normal access-controlled view.
-  const visibleAppIds = supabase ? allowedAppIds : apps.map((app) => app.id);
+  // Two independent reasons sign-in might not be usable yet: no Supabase
+  // project wired up at all (`supabase` is null), or a project exists but
+  // its Azure provider isn't enabled yet (real sign-in would just error).
+  // Either way, demo mode: show every app rather than gate on a login
+  // that can't succeed. Flip VITE_REQUIRE_LOGIN=true once Azure sign-in
+  // actually works end-to-end -- nothing else needs to change, this falls
+  // through to the normal access-controlled view on its own.
+  const loginRequired = Boolean(supabase) && import.meta.env.VITE_REQUIRE_LOGIN === 'true';
+  const visibleAppIds = loginRequired ? allowedAppIds : apps.map((app) => app.id);
 
   return (
     <div className="relative min-h-screen overflow-hidden px-[18px] pt-5 pb-10 sm:px-8 sm:pt-7 sm:pb-14 lg:pb-28">
@@ -64,7 +68,7 @@ export default function App() {
             <Route
               path="/"
               element={
-                session || !supabase ? (
+                session || !loginRequired ? (
                   <Launcher allowedAppIds={visibleAppIds} />
                 ) : (
                   <Login />
