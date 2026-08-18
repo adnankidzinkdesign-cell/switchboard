@@ -36,7 +36,12 @@ export default function App() {
             <Loader2 className="h-5 w-5 animate-spin text-accent" aria-hidden="true" />
             <span className="font-medium text-ink-strong/68">Loading…</span>
           </div>
-        ) : session ? (
+        ) : session || !supabase ? (
+          // No Supabase project is wired up yet (see client/.env.example),
+          // so there's no real sign-in to gate on — show the dashboard
+          // directly. Once real credentials are set, `supabase` stops being
+          // null and this falls through to the normal session check below,
+          // so the login page comes back on its own with no flag to flip.
           <Launcher />
         ) : (
           <Login />
