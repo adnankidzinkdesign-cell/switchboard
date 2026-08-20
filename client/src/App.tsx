@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { Loader2, LogOut, ShieldCheck } from 'lucide-react';
+import { Button } from '@kidzink/ui';
 import PageBackground from './PageBackground';
 import Login from './Login';
 import Launcher from './Launcher';
@@ -47,14 +48,16 @@ export default function App() {
               </Link>
             )}
             {session && (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => supabase?.auth.signOut()}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-strong/68 transition hover:text-ink-strong"
+                className="gap-1.5 text-sm font-semibold text-ink-strong/68 hover:text-ink-strong"
               >
                 <LogOut size={15} strokeWidth={2.5} aria-hidden="true" />
                 Sign out
-              </button>
+              </Button>
             )}
           </div>
         )}

@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, Search } from 'lucide-react';
+import { Badge, Input, Toggle } from '@kidzink/ui';
 import { apps } from './apps';
 import { supabase } from './lib/supabaseClient';
 import type { SwitchboardUser } from './lib/database.types';
@@ -155,12 +156,12 @@ export default function AdminPanel({ demoMode = false }: { demoMode?: boolean })
               className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-strong/40"
               aria-hidden="true"
             />
-            <input
+            <Input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Filter by name or email"
-              className="w-full rounded-full border border-ink-strong/16 bg-white py-2 pr-4 pl-9 text-sm outline-none focus:border-accent"
+              className="rounded-full pl-9 text-sm"
             />
           </div>
 
@@ -187,20 +188,22 @@ export default function AdminPanel({ demoMode = false }: { demoMode?: boolean })
                         <div className="text-xs text-ink-strong/50">{user.email}</div>
                       )}
                       {user.role === 'admin' && (
-                        <span className="mt-1 inline-block rounded-full bg-accent/10 px-2 py-0.5 text-[0.65rem] font-bold text-accent">
+                        <Badge
+                          variant="outline"
+                          className="mt-1 border-transparent bg-accent/10 px-2 py-0.5 text-[0.65rem] font-bold text-accent"
+                        >
                           Admin
-                        </span>
+                        </Badge>
                       )}
                     </td>
                     {apps.map((app) => (
                       <td key={app.id} className="px-3 py-2.5 text-center">
-                        <input
-                          type="checkbox"
+                        <Toggle
+                          size="sm"
                           checked={access[user.email]?.has(app.id) ?? false}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            toggle(user.email, app.id, e.target.checked)
+                          onCheckedChange={(checked: boolean) =>
+                            toggle(user.email, app.id, checked)
                           }
-                          className="h-4 w-4 accent-accent"
                           aria-label={`${user.email} can access ${app.title}`}
                         />
                       </td>

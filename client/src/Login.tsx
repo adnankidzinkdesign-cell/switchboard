@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Loader2, Mail } from 'lucide-react';
+import { Button, Input } from '@kidzink/ui';
 import { supabase } from './lib/supabaseClient';
 
 // Deferred, not removed: the Azure App Registration this depends on isn't
@@ -90,19 +91,19 @@ export default function Login() {
       ) : (
         <>
           <form onSubmit={sendMagicLink} className="w-full">
-            <input
+            <Input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@kidzink.com"
               required
               disabled={pending}
-              className="w-full rounded-full border-[1.5px] border-ink-strong/16 bg-white px-5 py-3 text-center text-[0.95rem] outline-none focus:border-accent disabled:opacity-70"
+              className="rounded-full text-center disabled:opacity-70"
             />
-            <button
+            <Button
               type="submit"
               disabled={pending}
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-[0.95rem] font-bold text-on-accent transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
+              className="mt-3 w-full rounded-full bg-accent py-3 text-[0.95rem] text-on-accent hover:bg-accent-hover"
             >
               {pending ? (
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -110,7 +111,7 @@ export default function Login() {
                 <Mail size={16} strokeWidth={2.5} aria-hidden="true" />
               )}
               {pending ? 'Sending…' : 'Email me a sign-in link'}
-            </button>
+            </Button>
           </form>
 
           {MICROSOFT_SIGN_IN_ENABLED && (
@@ -120,15 +121,16 @@ export default function Login() {
                 or
                 <span className="h-px flex-1 bg-ink-strong/10" />
               </div>
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={signInWithMicrosoft}
                 disabled={pending}
-                className="inline-flex w-full items-center justify-center gap-3 rounded-full border-[1.5px] border-ink-strong/16 bg-white px-6 py-3 text-[0.95rem] font-bold text-ink-strong transition hover:-translate-y-px hover:shadow-[0_8px_16px_rgba(24,24,27,0.1)] disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full rounded-full border-[1.5px] border-ink-strong/16 py-3 text-[0.95rem] text-ink-strong hover:-translate-y-px hover:shadow-[0_8px_16px_rgba(24,24,27,0.1)]"
               >
                 <MicrosoftMark />
                 Sign in with Microsoft
-              </button>
+              </Button>
             </>
           )}
 

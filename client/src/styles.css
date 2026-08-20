@@ -1,4 +1,10 @@
 @import 'tailwindcss';
+@import '@kidzink/ui/theme.css';
+
+/* Tailwind v4 only generates utilities for class names it can find as
+   literal strings in scanned files -- @kidzink/ui ships as compiled JS in
+   node_modules, so it needs an explicit @source or its classes get purged. */
+@source '../node_modules/@kidzink/ui/dist/**/*.{js,mjs}';
 
 /* ── The single place any design value is defined ─────────────────────────
    Official Kidzink swatches (Kidzink Colour Swatches.ase) become Tailwind
