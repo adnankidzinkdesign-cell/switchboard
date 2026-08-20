@@ -10,7 +10,7 @@ import {
   ClipboardCheck,
 } from 'lucide-react';
 
-export type AppStatus = 'in-development' | 'coming-soon';
+export type AppStatus = 'live' | 'in-development' | 'coming-soon';
 
 export interface AppEntry {
   id: string;
@@ -31,21 +31,21 @@ export const apps: AppEntry[] = [
     id: 'consultant-hub',
     title: 'Consultant Hub',
     description: 'Screen, review and onboard consultants with confidence.',
-    status: 'in-development',
+    status: 'live',
     icon: User,
     bg: '#e4dbfa',
     iconBg: '#4b39d9',
-    href: null,
+    href: 'https://consultflow-kidzink.netlify.app/',
   },
   {
     id: 'project-pulse',
     title: 'Project Pulse',
     description: 'Manage projects and track their RAG status at a glance.',
-    status: 'in-development',
+    status: 'live',
     icon: BarChart3,
     bg: '#fbd9ce',
     iconBg: '#e43e2f', // Kidzink Red (official swatch)
-    href: null,
+    href: 'https://scorecard-kidzink.netlify.app/',
   },
   {
     id: 'peopleflow',
@@ -110,6 +110,7 @@ export const apps: AppEntry[] = [
 ];
 
 export const STATUS_LABEL: Record<AppStatus, string> = {
+  live: 'Live',
   'in-development': 'In development',
   'coming-soon': 'Coming soon',
 };

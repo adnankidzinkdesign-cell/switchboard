@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { Badge, Button } from '@kidzink/ui';
 import { STATUS_LABEL, type AppEntry } from './apps';
 
 // React's CSSProperties doesn't know about custom properties -- --icon-bg
@@ -10,8 +11,10 @@ interface CardStyle extends CSSProperties {
 
 export default function AppCard({ app }: { app: AppEntry }) {
   const { title, description, status, icon: Icon, bg, iconBg, href } = app;
-  const isLive = status === 'in-development';
-  const cta = isLive ? 'Open app' : 'Learn more';
+  // CTA reflects whether there's actually somewhere to go, not the status
+  // label -- an app can be "in development" and still have a preview link,
+  // same as "live" always will.
+  const cta = href ? 'Open app' : 'Learn more';
   const cardStyle: CardStyle = { backgroundColor: bg, '--icon-bg': iconBg };
 
   return (
@@ -36,28 +39,40 @@ export default function AppCard({ app }: { app: AppEntry }) {
         <h2 className="text-[1.3rem] leading-tight font-bold tracking-[-0.03em] text-ink-strong">
           {title}
         </h2>
-        <span className="mt-0.5 shrink-0 rounded-full px-2.5 py-1 text-[0.65rem] font-bold whitespace-nowrap text-[color-mix(in_srgb,var(--icon-bg)_82%,black)] bg-[color-mix(in_srgb,var(--icon-bg)_18%,white)]">
+        <Badge
+          variant="outline"
+          className="mt-0.5 shrink-0 border-transparent px-2.5 py-1 text-[0.65rem] font-bold whitespace-nowrap text-[color-mix(in_srgb,var(--icon-bg)_82%,black)] bg-[color-mix(in_srgb,var(--icon-bg)_18%,white)]"
+        >
           {STATUS_LABEL[status]}
-        </span>
+        </Badge>
       </div>
 
       <p className="relative z-1 grow text-[1rem] leading-snug font-semibold tracking-[-0.01em] text-[color-mix(in_srgb,var(--icon-bg)_60%,var(--color-ink-strong)_40%)]">
         {description}
       </p>
 
-      <a
-        className={`relative z-1 mt-[18px] inline-flex w-fit items-center gap-2 self-start rounded-full border-[1.5px] border-ink-strong/16 bg-white/55 px-[18px] py-2.5 text-[0.95rem] font-bold text-ink-strong no-underline transition hover:-translate-y-px hover:bg-white/85 hover:shadow-[0_8px_16px_rgba(24,24,27,0.1)] ${
-          isLive ? '' : 'opacity-85'
+      <Button
+        variant="outline"
+        // Button's underlying Base UI primitive defaults nativeButton to
+        // true, which assumes `render` still produces a real <button> --
+        // it warns otherwise. This one renders as <a>, so opt out.
+        nativeButton={false}
+        className={`relative z-1 mt-[18px] w-fit self-start rounded-full border-[1.5px] border-ink-strong/16 bg-white/55 px-[18px] py-2.5 text-[0.95rem] font-bold text-ink-strong no-underline hover:-translate-y-px hover:bg-white/85 hover:shadow-[0_8px_16px_rgba(24,24,27,0.1)] ${
+          href ? '' : 'opacity-85'
         }`}
-        href={href ?? '#'}
-        aria-disabled={!href}
-        onClick={(e) => {
-          if (!href) e.preventDefault();
-        }}
+        render={
+          <a
+            href={href ?? '#'}
+            aria-disabled={!href}
+            onClick={(e) => {
+              if (!href) e.preventDefault();
+            }}
+          />
+        }
       >
         {cta}
         <ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />
-      </a>
+      </Button>
     </article>
   );
 }
